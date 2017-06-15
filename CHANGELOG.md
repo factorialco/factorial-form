@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.0.5`
+
+Relaxed types a bit
+
 ## `0.0.4`
 
 Fixed observables

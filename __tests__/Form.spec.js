@@ -181,7 +181,7 @@ describe('Form', () => {
         })
         .catch(err => {
           expect(err).toEqual(errors)
-          expect(form.get('name').errors).toEqual(errors.name)
+          expect(form.get('name').errors.toJS()).toEqual(errors.name)
         })
     })
   })
@@ -210,7 +210,7 @@ describe('Form', () => {
 
       return form.create({ create: createMock }).catch(err => {
         expect(err).toEqual(errors)
-        expect(form.get('name').errors).toEqual(errors.name)
+        expect(form.get('name').errors.toJS()).toEqual(errors.name)
       })
     })
   })

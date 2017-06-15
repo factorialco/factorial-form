@@ -1,6 +1,5 @@
 // @flow
 import { action, runInAction, computed, toJS } from 'mobx'
-import { Model, Collection } from 'mobx-rest'
 import _ from 'lodash'
 import Field from './Field'
 import type { Type } from './types'
@@ -8,18 +7,26 @@ import flat from 'flat'
 
 type CreateOptions = {
   optimistic?: boolean,
-  onProgress?: () => mixed
+  onProgress?: () => any
 }
 
 type SaveOptions = {
   optimistic?: boolean,
   patch?: boolean,
-  onProgress?: () => mixed
+  onProgress?: () => any
 }
 
 type Schema = { [key: string]: Type | {} } // TODO: Use recursive types when tcomb supports them
-type Values = { [key: string]: mixed }
+type Values = { [key: string]: any }
 type Errors = { [key: string]: Array<string> | {} } // TODO: Use recursive types when tcomb supports them
+
+interface Collection {
+  create(data: Values, options: CreateOptions): Promise<*>;
+}
+
+interface Model {
+  save(data: Values, options: SaveOptions): Promise<*>;
+}
 
 const buildFields = (values: Values, schema: Schema) =>
   _.omitBy(
@@ -120,7 +127,7 @@ export default class Form {
    * hash of attribute -> value
    */
   @action setValues (values: Values) {
-    _.forEach(values, (value: mixed, attribute: string) => {
+    _.forEach(values, (value: any, attribute: string) => {
       if (!this.has(attribute)) return
 
       const field = this.get(attribute)
@@ -133,7 +140,7 @@ export default class Form {
    * Creates a new model on the given collection
    */
   create (
-    collection: Collection<*>,
+    collection: Collection,
     options: CreateOptions = { optimistic: true }
   ): Promise<*> {
     return this.handleErrors(() => collection.create(this.data(), options))

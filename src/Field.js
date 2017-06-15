@@ -9,11 +9,11 @@ const DATE_FORMAT = 'DD/MM/YYYY'
 
 export default class Field {
   type: Type
-  @observable value: mixed = null
+  @observable value: any = null
   @observable errors: ?Array<string> = null
-  @observable originalValue: mixed = null
+  @observable originalValue: any = null
 
-  constructor (value: mixed, type: Type) {
+  constructor (value: any, type: Type) {
     this.type = type
 
     this.mapAndSet(value)
@@ -25,7 +25,7 @@ export default class Field {
    * Converts the incoming value
    * before being persisted in the field
    */
-  _mapIn (value: ?mixed): mixed {
+  _mapIn (value: ?any): any {
     if (value === null) return ''
 
     switch (this.type) {
@@ -54,7 +54,7 @@ export default class Field {
   /**
    * Converts back the value from the field
    */
-  _mapOut (): ?mixed {
+  _mapOut (): ?any {
     const value = typeof this.value === 'string'
       ? this.value.trim()
       : this.value
@@ -91,11 +91,11 @@ export default class Field {
     return this.originalValue !== this.value
   }
 
-  @action mapAndSet (value: mixed): void {
+  @action mapAndSet (value: any): void {
     this.value = this._mapIn(value)
   }
 
-  @action set (value: mixed): void {
+  @action set (value: any): void {
     this.value = value
   }
 

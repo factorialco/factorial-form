@@ -1,6 +1,6 @@
 {
   "name": "factorial-form",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Factorial form library",
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "mobx": "^3.1.11",
-    "mobx-rest": "^2.1.7",
     "lodash": "^4.17.4",
     "moment": "2.18.1",
     "flat": "2.0.1"
