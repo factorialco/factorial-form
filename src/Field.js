@@ -26,7 +26,7 @@ export default class Field {
    * before being persisted in the field
    */
   _mapIn (value: ?any): any {
-    if (_.isNull(value)) return ''
+    if (value == null) return ''
 
     switch (this.type) {
       case 'timestamp':
