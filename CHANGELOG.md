@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.0.4`
+
+Fixed observables
+
 ## `0.0.3`
 
 Fixed babelrc

@@ -9,9 +9,9 @@ const DATE_FORMAT = 'DD/MM/YYYY'
 
 export default class Field {
   type: Type
-  @observable value: mixed
-  @observable errors: ?Array<string>
-  @observable originalValue: mixed
+  @observable value: mixed = null
+  @observable errors: ?Array<string> = null
+  @observable originalValue: mixed = null
 
   constructor (value: mixed, type: Type) {
     this.type = type
