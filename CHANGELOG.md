@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.0.6`
+
+Fixed some defensive code
+
 ## `0.0.5`
 
 Relaxed types a bit
