@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.0.9`
+
+Added `isComplete`
+
 ## `0.0.8`
 
 Fixed some defensive code
