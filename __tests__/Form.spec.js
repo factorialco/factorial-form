@@ -65,6 +65,20 @@ describe('Form', () => {
     })
   })
 
+  describe('isComplete', () => {
+    describe('when a field is missing', () => {
+      beforeEach(() => form.setValues({name: ''}))
+      it('returns false', () => {
+        expect(form.isComplete).toBe(false)
+      })
+    })
+
+    describe('when all fields are complete', () => {
+      beforeEach(() => form.setValues({age: 0}))
+      it('returns true', () => expect(form.isComplete).toBe(true))
+    })
+  })
+
   describe('isDirty', () => {
     describe('when data is unchanged', () => {
       it('returns false', () => {
