@@ -100,6 +100,22 @@ export default class Form {
   }
 
   /**
+   * Checks if all fields have a value.
+   * @type {boolean}
+   */
+  @computed get isComplete (): boolean {
+    return !_.some(this.fields, (field: Field) => {
+      switch (field.type) {
+        case 'number':
+        case 'cents':
+          return _.isNull(field.value)
+        default:
+          return !field.value
+      }
+    })
+  }
+
+  /**
    * Return the values from the form as they are
    *
    * TODO: Use Computed
