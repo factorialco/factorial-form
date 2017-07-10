@@ -1,6 +1,6 @@
 {
   "name": "factorial-form",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Factorial form library",
   "repository": {
     "type": "git",
@@ -26,10 +26,12 @@
     ]
   },
   "dependencies": {
-    "mobx": "^3.1.11",
     "lodash": "^4.17.4",
     "moment": "2.18.1",
     "flat": "2.0.1"
+  },
+  "peerDependencies": {
+    "mobx": "^3.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -56,6 +58,7 @@
     "husky": "^0.13.4",
     "jest": "^20.0.4",
     "lint-staged": "^3.6.0",
+    "mobx": "^3.2.0",
     "prettier-standard": "^5.0.0",
     "rimraf": "^2.6.1"
   },
