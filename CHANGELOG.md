@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.1.1`
+
+Handle booleans on isComplete
+
 ## `0.1.0`
 
 Made mobx a peer dependency

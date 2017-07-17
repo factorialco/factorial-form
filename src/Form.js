@@ -107,6 +107,7 @@ export default class Form {
     return !_.some(this.fields, (field: Field) => {
       switch (field.type) {
         case 'number':
+        case 'boolean':
         case 'cents':
           return _.isNull(field.value)
         default:
