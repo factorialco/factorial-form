@@ -3,6 +3,7 @@ import { Form } from '../src'
 const attributes = {
   id: 1,
   name: 'paco',
+  active: true,
   age: 0,
   price: 0,
   country_metadata: {
@@ -15,6 +16,7 @@ const types = {
   name: 'string',
   age: 'number',
   price: 'cents',
+  active: 'boolean',
   country_metadata: {
     social_security: 'string'
   }
@@ -58,6 +60,7 @@ describe('Form', () => {
       expect(form.values).toEqual({
         id: '1',
         name: 'paco',
+        active: true,
         age: '0',
         price: '0',
         'country_metadata.social_security': '1234'
@@ -68,6 +71,38 @@ describe('Form', () => {
   describe('isComplete', () => {
     describe('when a field is missing', () => {
       beforeEach(() => form.setValues({name: ''}))
+      it('returns false', () => {
+        expect(form.isComplete).toBe(false)
+      })
+    })
+
+    describe('when a boolean field is missing', () => {
+      beforeEach(() => {
+        const newAttr = {
+          id: 1,
+          name: 'paco',
+          age: 0,
+          price: 0,
+          country_metadata: {
+            social_security: '1234'
+          }
+        }
+        form = new Form(newAttr, types)
+      })
+      it('returns false', () => {
+        expect(form.isComplete).toBe(false)
+      })
+    })
+
+    describe('when a boolean field is empty', () => {
+      beforeEach(() => form.setValues({active: ''}))
+      it('returns false', () => {
+        expect(form.isComplete).toBe(false)
+      })
+    })
+
+    describe('when a boolean field is null', () => {
+      beforeEach(() => form.setValues({active: null}))
       it('returns false', () => {
         expect(form.isComplete).toBe(false)
       })
