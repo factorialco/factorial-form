@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.1.3`
+
+Expose number parser
+
 ## `0.1.1`
 
 Handle booleans on isComplete
