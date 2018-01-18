@@ -96,7 +96,14 @@ export default class Field {
   }
 
   @action set (value: any): void {
-    this.value = value
+    switch (this.type) {
+      case 'number':
+      case 'cents':
+        this.value = value.replace(/[^\d\.,]/g, '')
+        break
+      default:
+        this.value = value
+    }
   }
 
   @action clean (): void {
