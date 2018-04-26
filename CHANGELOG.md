@@ -1,5 +1,9 @@
 # Changelog
 
+## `0.1.5`
+
+Fix the `,02` scenario
+
 ## `0.1.3`
 
 Expose number parser

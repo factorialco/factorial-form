@@ -92,6 +92,10 @@ describe('Field', () => {
       expect(field._mapOut()).toBe(-2020)
 
       field = new Field(null, 'cents')
+      field.set('-20.02')
+      expect(field._mapOut()).toBe(-2002)
+
+      field = new Field(null, 'cents')
       field.set('583,3')
       expect(field._mapOut()).toBe(58330)
 
@@ -114,6 +118,10 @@ describe('Field', () => {
       field = new Field(null, 'cents')
       field.set('2,000.20')
       expect(field._mapOut()).toBe(200020)
+
+      field = new Field(null, 'cents')
+      field.set('2,000.02')
+      expect(field._mapOut()).toBe(200002)
 
       field = new Field(null, 'number')
       field.set('2.000')
