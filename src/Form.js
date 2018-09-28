@@ -1,5 +1,5 @@
 // @flow
-import { action, runInAction, computed, toJS } from 'mobx'
+import { observable, action, runInAction, computed, toJS } from 'mobx'
 import _ from 'lodash'
 import Field from './Field'
 import type { Type } from './types'
@@ -41,7 +41,7 @@ const buildFields = (values: Values, schema: Schema) =>
   )
 
 export default class Form {
-  fields: { [key: string]: Field }
+  @observable fields: { [key: string]: Field }
 
   constructor (values: Values, schema: Schema) {
     this.fields = buildFields(values, schema)
