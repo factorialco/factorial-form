@@ -5,7 +5,7 @@ import moment from 'moment'
 import type { Type } from './types'
 import numberParser from './numberParser'
 
-const DATE_FORMAT = 'DD/MM/YYYY'
+const DATE_FORMAT = 'L'
 
 export default class Field {
   type: Type

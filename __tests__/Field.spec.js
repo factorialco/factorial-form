@@ -1,6 +1,11 @@
 import { Field } from '../src'
+import moment from 'moment'
 
 describe('Field', () => {
+  beforeAll(() => {
+    moment.locale('es')
+  })
+
   describe('set', () => {
     it('returns "" if the value is null', () => {
       expect(new Field(null, 'string').value).toBe('')
