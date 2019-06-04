@@ -178,13 +178,15 @@ export default class Form {
 
     try {
       values = toJS(await fn())
-    } catch (errors) {
+    } catch (error) {
+      const { payload } = error
+
       runInAction('handleErrors-error', () => {
-        this.setErrors(toJS(errors))
+        this.setErrors(toJS(payload || error))
         this.cleanAll()
       })
 
-      throw errors
+      throw error
     }
 
     runInAction('handleErrors-done', () => {
