@@ -1,6 +1,6 @@
 {
   "name": "factorial-form",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Factorial form library",
   "repository": {
     "type": "git",
@@ -26,8 +26,8 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.4",
-    "moment": "2.21.0",
+    "lodash": "4.17.15",
+    "moment": "2.24.0",
     "flat": "2.0.1"
   },
   "peerDependencies": {
