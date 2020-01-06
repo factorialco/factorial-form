@@ -4,7 +4,7 @@
   "description": "Factorial form library",
   "repository": {
     "type": "git",
-    "url": "git@github.com:factorial/factorial-form.git"
+    "url": "git@github.com:factorialco/factorial-form.git"
   },
   "license": "MIT",
   "jest": {
