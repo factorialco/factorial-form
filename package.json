@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "lodash": "4.17.19",
+    "lodash": "4.17.21",
     "moment": "2.24.0",
     "flat": "2.0.1"
   },
