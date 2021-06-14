@@ -1,31 +1,40 @@
-// @flow
-import { observable, action, computed } from 'mobx'
-import _ from 'lodash'
+import { observable, action, computed, makeObservable } from 'mobx'
+import isFinite from 'lodash/isFinite'
 import moment from 'moment'
-import type { Type } from './types'
+import { Type } from './types'
 import numberParser from './numberParser'
 
 const DATE_FORMAT = 'L'
 
 export default class Field {
   type: Type
-  @observable value: any = null
-  @observable errors: ?Array<string> = null
-  @observable originalValue: any = null
+  value: any
+  errors: Array<string> | null
+  originalValue: any
 
-  constructor (value: any, type: Type) {
+  constructor(value: any, type: Type) {
     this.type = type
-
     this.mapAndSet(value)
-    this.clean()
-    this.setErrors(null)
+    this.originalValue = this.value
+    this.errors = null
+
+    makeObservable(this, {
+      value: observable,
+      errors: observable,
+      originalValue: observable,
+      isDirty: computed,
+      mapAndSet: action,
+      set: action,
+      clean: action,
+      setErrors: action
+    })
   }
 
   /**
    * Converts the incoming value
    * before being persisted in the field
    */
-  _mapIn (value: ?any): any {
+  _mapIn(value: any | null): any {
     if (value == null) return ''
 
     switch (this.type) {
@@ -54,7 +63,7 @@ export default class Field {
   /**
    * Converts back the value from the field
    */
-  _mapOut (): ?any {
+  _mapOut(): any | null {
     const value = typeof this.value === 'string'
       ? this.value.trim()
       : this.value
@@ -69,13 +78,13 @@ export default class Field {
         const number = numberParser(
           typeof value === 'number' ? value.toString() : String(value)
         )
-        return number != null && _.isFinite(number) ? Math.round(number) : null
+        return number != null && isFinite(number) ? Math.round(number) : null
       case 'cents':
         const cents = numberParser(
           typeof value === 'number' ? value.toString() : String(value)
         )
 
-        return cents != null && _.isFinite(cents) ? Math.round(cents * 100) : null
+        return cents != null && isFinite(cents) ? Math.round(cents * 100) : null
       case 'boolean':
         return value
       case 'string':
@@ -87,23 +96,23 @@ export default class Field {
     }
   }
 
-  @computed get isDirty (): boolean {
+  get isDirty(): boolean {
     return this.originalValue !== this.value
   }
 
-  @action mapAndSet (value: any): void {
+  mapAndSet(value: any): void {
     this.value = this._mapIn(value)
   }
 
-  @action set (value: any): void {
+  set(value: any): void {
     this.value = value
   }
 
-  @action clean (): void {
+  clean(): void {
     this.originalValue = this.value
   }
 
-  @action setErrors (errors: ?Array<string>): void {
+  setErrors(errors: Array<string> | null): void {
     this.errors = errors
   }
 }

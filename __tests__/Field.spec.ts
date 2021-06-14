@@ -26,14 +26,10 @@ describe('Field', () => {
       expect(() => new Field(true, 'number')).toThrow()
       expect(() => new Field(true, 'cents')).toThrow()
     })
-
-    it('throws on unknown type', () => {
-      expect(() => new Field(100, 'unknown')).toThrow('unknown field type')
-    })
   })
 
   describe('_mapOut', () => {
-    let field
+    let field: any
 
     it('maps the supported types', () => {
       field = new Field(null, 'timestamp')
@@ -221,14 +217,6 @@ describe('Field', () => {
       field = new Field(null, 'cents')
       field.set('Infinity')
       expect(field._mapOut()).toBe(null)
-    })
-
-    it('throws on unknown type', () => {
-      expect(() => {
-        field = new Field(null, 'unknown')
-        field.set(100)
-        field._mapOut()
-      }).toThrow('unknown field type')
     })
   })
 })
