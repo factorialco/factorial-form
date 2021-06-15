@@ -1,6 +1,6 @@
 # Changelog
 
-## `1.0.0`
+## `2.0.0`
 
 - Upgrade mobx dependency
 - Removed decorators
