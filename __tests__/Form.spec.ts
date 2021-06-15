@@ -35,14 +35,9 @@ describe('buildFields', () => {
     )
     expect(form.get('foo.bar').value).toBe('qux')
   })
-
-  it('with an empty object it should not include that field', () => {
-    const form = new Form({}, { foo: {} })
-    expect(form.has('foo')).toBe(false)
-  })
 })
 
-let form
+let form: any
 
 describe('Form', () => {
   beforeEach(() => {
@@ -70,7 +65,7 @@ describe('Form', () => {
 
   describe('isComplete', () => {
     describe('when a field is missing', () => {
-      beforeEach(() => form.setValues({name: ''}))
+      beforeEach(() => form.setValues({ name: '' }))
       it('returns false', () => {
         expect(form.isComplete).toBe(false)
       })
@@ -95,21 +90,21 @@ describe('Form', () => {
     })
 
     describe('when a boolean field is empty', () => {
-      beforeEach(() => form.setValues({active: ''}))
+      beforeEach(() => form.setValues({ active: '' }))
       it('returns false', () => {
         expect(form.isComplete).toBe(false)
       })
     })
 
     describe('when a boolean field is null', () => {
-      beforeEach(() => form.setValues({active: null}))
+      beforeEach(() => form.setValues({ active: null }))
       it('returns false', () => {
         expect(form.isComplete).toBe(false)
       })
     })
 
     describe('when all fields are complete', () => {
-      beforeEach(() => form.setValues({age: 0}))
+      beforeEach(() => form.setValues({ age: 0 }))
       it('returns true', () => expect(form.isComplete).toBe(true))
     })
   })
@@ -199,7 +194,7 @@ describe('Form', () => {
   describe('save', () => {
     it('sets the values if the promise succeeds', () => {
       const saveMock = jest.fn(values => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
           resolve(values)
         })
       })
@@ -207,7 +202,7 @@ describe('Form', () => {
       return form
         .save({
           save: saveMock,
-          attributes: { toJS: () => {} }
+          attributes: { toJS: () => { } }
         })
         .then(vals => {
           expect(vals).toEqual(attributes)
@@ -218,7 +213,7 @@ describe('Form', () => {
     it('sets the errors if the promise fails', () => {
       const errors = { name: ['too long'] }
       const saveMock = jest.fn(_values => {
-        return new Promise((resolve, reject) => {
+        return new Promise((_resolve, reject) => {
           reject(errors)
         })
       })
@@ -226,11 +221,11 @@ describe('Form', () => {
       return form
         .save({
           save: saveMock,
-          attributes: { toJS: () => {} }
+          attributes: { toJS: () => { } }
         })
         .catch(err => {
           expect(err).toEqual(errors)
-          expect(form.get('name').errors.toJS()).toEqual(errors.name)
+          expect(form.get('name').errors.slice()).toEqual(errors.name)
         })
     })
   })
@@ -238,7 +233,7 @@ describe('Form', () => {
   describe('create', () => {
     it('sets the values if the promise succeeds', () => {
       const createMock = jest.fn(values => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
           resolve(values)
         })
       })
@@ -252,14 +247,14 @@ describe('Form', () => {
     it('sets the errors if the promise fails', () => {
       const errors = { name: ['too long'] }
       const createMock = jest.fn(_values => {
-        return new Promise((resolve, reject) => {
+        return new Promise((_resolve, reject) => {
           reject(errors)
         })
       })
 
       return form.create({ create: createMock }).catch(err => {
         expect(err).toEqual(errors)
-        expect(form.get('name').errors.toJS()).toEqual(errors.name)
+        expect(form.get('name').errors.slice()).toEqual(errors.name)
       })
     })
   })

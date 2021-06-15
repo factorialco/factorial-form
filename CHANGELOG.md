@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.0.0`
+
+- Upgrade mobx dependency
+- Removed decorators
+- Switched to typescript
+
 ## `0.2.0`
 
 Add support for different locales

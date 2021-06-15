@@ -1,8 +1,12 @@
-// @flow
-import { action, runInAction, computed, toJS } from 'mobx'
-import _ from 'lodash'
+import { action, computed, toJS, makeObservable } from 'mobx'
+import omitBy from 'lodash/omitBy'
+import mapValues from 'lodash/mapValues'
+import get from 'lodash/get'
+import isNull from 'lodash/isNull'
+import isObject from 'lodash/isObject'
+import forEach from 'lodash/forEach'
+import some from 'lodash/some'
 import Field from './Field'
-import type { Type } from './types'
 import flat from 'flat'
 
 type CreateOptions = {
@@ -16,52 +20,63 @@ type SaveOptions = {
   onProgress?: () => any
 }
 
-type Schema = { [key: string]: Type | {} } // TODO: Use recursive types when tcomb supports them
+type Schema = { [key: string]: any }
 type Values = { [key: string]: any }
-type Errors = { [key: string]: Array<string> | {} } // TODO: Use recursive types when tcomb supports them
+type Errors = { [key: string]: Array<string> | {} }
 
 interface Collection {
-  create(data: Values, options: CreateOptions): Promise<*>;
+  create(data: Values, options: CreateOptions): Promise<any>;
 }
 
 interface Model {
-  save(data: Values, options: SaveOptions): Promise<*>;
+  save(data: Values, options: SaveOptions): Promise<any>;
 }
 
 const buildFields = (values: Values, schema: Schema) =>
-  _.omitBy(
-    _.mapValues(
+  omitBy(
+    mapValues(
       flat(schema),
-      (value: Type | {}, attribute: string) =>
-        typeof value === 'string'
-          ? new Field(_.get(values, attribute), value)
-          : null
+      (value: any, attribute: string) =>
+        isObject(value)
+          ? null
+          : new Field(get(values, attribute), value)
     ),
-    _.isNull
+    isNull
   )
 
 export default class Form {
   fields: { [key: string]: Field }
 
-  constructor (values: Values, schema: Schema) {
+  constructor(values: Values, schema: Schema) {
     this.fields = buildFields(values, schema)
+
+    makeObservable(this, {
+      cleanAll: action,
+      resetErrors: action,
+      setErrors: action,
+      resetValues: action,
+      setValues: action,
+      handleErrors: action,
+      isComplete: computed,
+      values: computed,
+      isDirty: computed
+    })
   }
 
-  data (): Values {
+  data(): Values {
     return flat.unflatten(
-      _.mapValues(this.fields, (field: Field) => {
-        return field._mapOut()
-      })
+      mapValues(this.fields, (field: Field) => field._mapOut())
     )
   }
 
-  has (attribute: string): boolean {
+  has(attribute: string): boolean {
     return Boolean(this.fields[attribute])
   }
 
-  get (attribute: string): Field {
+  get(attribute: string): Field {
     const field = this.fields[attribute]
     if (!field) throw new Error(`Field "${attribute}" not found`)
+
     return field
   }
 
@@ -69,17 +84,17 @@ export default class Form {
    * Cleans all the forms by reseting their original
    * values
    */
-  @action cleanAll (): void {
-    _.forEach(this.fields, (field: Field) => {
+  cleanAll(): void {
+    forEach(this.fields, (field: Field) =>
       field.clean()
-    })
+    )
   }
 
   /**
    * Resets all the error fields
    */
-  @action resetErrors (): void {
-    _.forEach(this.fields, (field: Field) => {
+  resetErrors(): void {
+    forEach(this.fields, (field: Field) => {
       field.setErrors(null)
     })
   }
@@ -88,11 +103,11 @@ export default class Form {
    * Sets the errors with a given
    * hash of attribute -> error
    */
-  @action setErrors (errors: Errors) {
+  setErrors(errors: Errors) {
     this.resetErrors()
 
     const flatErrors: Errors = flat(errors, { safe: true })
-    _.forEach(flatErrors, (error: Array<string>, attribute: string) => {
+    forEach(flatErrors, (error: Array<string>, attribute: string) => {
       if (this.has(attribute)) {
         this.get(attribute).setErrors(error)
       }
@@ -101,15 +116,14 @@ export default class Form {
 
   /**
    * Checks if all fields have a value.
-   * @type {boolean}
    */
-  @computed get isComplete (): boolean {
-    return !_.some(this.fields, (field: Field) => {
+  get isComplete(): boolean {
+    return !some(this.fields, (field: Field) => {
       switch (field.type) {
         case 'number':
         case 'cents':
         case 'boolean':
-          return field.value === '' || _.isNull(field.value)
+          return field.value === '' || isNull(field.value)
         default:
           return !field.value
       }
@@ -118,33 +132,31 @@ export default class Form {
 
   /**
    * Return the values from the form as they are
-   *
-   * TODO: Use Computed
    */
-  @computed get values (): Values {
-    return _.mapValues(this.fields, (field: Field) => field.value)
+  get values(): Values {
+    return mapValues(this.fields, (field: Field) => field.value)
   }
 
   /**
    * Return whether the form is dirty
    */
-  @computed get isDirty (): boolean {
-    return _.some(this.fields, (field: Field): boolean => field.isDirty)
+  get isDirty(): boolean {
+    return some(this.fields, (field: Field): boolean => field.isDirty)
   }
 
   /**
    * Reset values
    */
-  @action resetValues () {
-    _.forEach(this.fields, (field: Field) => field.set(''))
+  resetValues() {
+    forEach(this.fields, (field: Field) => field.set(''))
   }
 
   /**
    * Sets the fields values with a given
    * hash of attribute -> value
    */
-  @action setValues (values: Values) {
-    _.forEach(values, (value: any, attribute: string) => {
+  setValues(values: Values) {
+    forEach(values, (value: any, attribute: string) => {
       if (!this.has(attribute)) return
 
       const field = this.get(attribute)
@@ -156,44 +168,44 @@ export default class Form {
   /**
    * Creates a new model on the given collection
    */
-  create (
+  create(
     collection: Collection,
     options: CreateOptions = { optimistic: true }
-  ): Promise<*> {
+  ): Promise<any> {
     return this.handleErrors(() => collection.create(this.data(), options))
   }
 
   /**
    * Saves the model with the given fields
    */
-  save (
+  save(
     model: Model,
     options: SaveOptions = { optimistic: true, patch: true }
-  ): Promise<*> {
+  ): Promise<any> {
     return this.handleErrors(async () => model.save(this.data(), options))
   }
 
-  @action async handleErrors (fn: () => Promise<*>): Promise<*> {
-    let values
+  async handleErrors(fn: () => Promise<any>): Promise<any> {
+    let values: any
 
     try {
       values = toJS(await fn())
     } catch (error) {
       const { payload } = error
 
-      runInAction('handleErrors-error', () => {
+      action('handleErrors-error', () => {
         this.setErrors(toJS(payload || error))
         this.cleanAll()
-      })
+      })()
 
       throw error
     }
 
-    runInAction('handleErrors-done', () => {
+    action('handleErrors-done', () => {
       this.setValues(values)
       this.resetErrors()
       this.cleanAll()
-    })
+    })()
 
     return values
   }
