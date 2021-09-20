@@ -109,7 +109,7 @@ export default class Field {
   }
 
   clean(): void {
-    this.originalValue = this.value
+    this.value = this.originalValue
   }
 
   setErrors(errors: Array<string> | null): void {
