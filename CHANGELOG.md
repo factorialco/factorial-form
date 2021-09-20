@@ -1,5 +1,9 @@
 # Changelog
 
+## `2.1.0`
+
+- Add `reset` and `resetAll` methods
+
 ## `2.0.0`
 
 - Upgrade mobx dependency
