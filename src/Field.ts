@@ -112,6 +112,10 @@ export default class Field {
     this.originalValue = this.value
   }
 
+  reset(): void {
+    this.value = this.originalValue
+  }
+
   setErrors(errors: Array<string> | null): void {
     this.errors = errors
   }

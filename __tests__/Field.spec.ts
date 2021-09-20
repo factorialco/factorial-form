@@ -219,4 +219,14 @@ describe('Field', () => {
       expect(field._mapOut()).toBe(null)
     })
   })
+
+  describe('reset', () => {
+    it('resets a field to its original value', () => {
+      const field = new Field('paco', 'string')
+      field.set('ferran')
+      expect(field.value).toBe('ferran')
+      field.reset()
+      expect(field.value).toBe('paco')
+    })
+  })
 })
