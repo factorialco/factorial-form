@@ -155,6 +155,17 @@ describe('Form', () => {
     })
   })
 
+  describe('resetAll', () => {
+    it('resets form to its original values', () => {
+      form.setValues({ name: 'resetMe', age: 20 })
+      expect(form.get('name').value).toBe('resetMe')
+      expect(form.get('age').value).toBe("20")
+      form.resetAll()
+      expect(form.get('name').value).toBe('paco')
+      expect(form.get('age').value).toBe("0")
+    })
+  })
+
   describe('setErrors', () => {
     it('populates the fields with errors', () => {
       form.setErrors({ name: ['too short'] })

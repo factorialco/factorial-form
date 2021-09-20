@@ -81,12 +81,23 @@ export default class Form {
   }
 
   /**
-   * Cleans all the forms by reseting their original
-   * values
+   * Cleans all the forms by changing their original
+   * values to correspond to their current values
    */
   cleanAll(): void {
     forEach(this.fields, (field: Field) =>
       field.clean()
+    )
+  }
+
+  /**
+   * Reset all the forms to their original
+   * values thereby discarding all changes made
+   */
+
+  resetAll(): void {
+    forEach(this.fields, (field: Field) =>
+      field.reset()
     )
   }
 
