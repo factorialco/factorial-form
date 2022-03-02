@@ -8,6 +8,7 @@ import forEach from 'lodash/forEach'
 import some from 'lodash/some'
 import Field from './Field'
 import flat from 'flat'
+import { Type } from './types'
 
 type CreateOptions = {
   optimistic?: boolean,
@@ -22,7 +23,7 @@ type SaveOptions = {
 
 type Schema = { [key: string]: any }
 type Values = { [key: string]: any }
-type Errors = { [key: string]: Array<string> | {} }
+type Errors = { [key: string]: string[] | null }
 
 interface Collection {
   create(data: Values, options: CreateOptions): Promise<any>;
@@ -36,10 +37,10 @@ const buildFields = (values: Values, schema: Schema) =>
   omitBy(
     mapValues(
       flat(schema),
-      (value: any, attribute: string) =>
+      (value, attribute) =>
         isObject(value)
           ? null
-          : new Field(get(values, attribute), value)
+          : new Field(get(values, attribute), value as Type)
     ),
     isNull
   )
@@ -118,7 +119,7 @@ export default class Form {
     this.resetErrors()
 
     const flatErrors: Errors = flat(errors, { safe: true })
-    forEach(flatErrors, (error: Array<string>, attribute: string) => {
+    forEach(flatErrors, (error, attribute) => {
       if (this.has(attribute)) {
         this.get(attribute).setErrors(error)
       }
@@ -196,12 +197,12 @@ export default class Form {
     return this.handleErrors(async () => model.save(this.data(), options))
   }
 
-  async handleErrors(fn: () => Promise<any>): Promise<any> {
-    let values: any
+  async handleErrors<T = unknown>(fn: () => Promise<T>): Promise<T> {
+    let values: T
 
     try {
       values = toJS(await fn())
-    } catch (error) {
+    } catch (error: any) {
       const { payload } = error
 
       action('handleErrors-error', () => {

@@ -8,21 +8,26 @@
   },
   "license": "MIT",
   "jest": {
-    "roots": [ "." ],
-    "transform": { ".+\\.tsx?$": "ts-jest" },
+    "roots": [
+      "."
+    ],
+    "transform": {
+      ".+\\.tsx?$": "ts-jest"
+    },
     "testRegex": "/__tests__/.*\\.spec\\.ts$"
   },
   "dependencies": {
     "flat": "5.0.2",
     "lodash": "^4.17.21",
-    "moment": "2.29.1",
     "mobx": "^6.3.2",
+    "moment": "2.29.1",
     "rollup-plugin-dts": "^3.0.2"
   },
   "peerDependencies": {
     "mobx": "^6.3.2"
   },
   "devDependencies": {
+    "@types/flat": "^5.0.2",
     "@types/jest": "26.0.23",
     "@types/lodash": "4.14.170",
     "@typescript-eslint/eslint-plugin": "4.26.1",
@@ -49,13 +54,13 @@
     "lint": "eslint --ext .ts --cache src/ __tests__/",
     "test": "yarn lint && yarn jest",
     "prepush": "yarn test",
-    "watch": "rollup --config -w",
-    "lint-staged": {
-      "linters": {
-        "{src|__tests__}/**/*.ts": [
-          "git add"
-        ]
-      }
+    "watch": "rollup --config -w"
+  },
+  "lint-staged": {
+    "linters": {
+      "{src|__tests__}/**/*.ts": [
+        "git add"
+      ]
     }
   }
 }
