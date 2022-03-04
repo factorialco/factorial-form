@@ -9,7 +9,7 @@ const DATE_FORMAT = 'L'
 export default class Field {
   type: Type
   value: any
-  errors: Array<string> | null
+  errors: string[] | {} | null
   originalValue: any
 
   constructor(value: any, type: Type) {
@@ -116,7 +116,7 @@ export default class Field {
     this.value = this.originalValue
   }
 
-  setErrors(errors: Array<string> | null): void {
+  setErrors(errors: string[] | {} | null): void {
     this.errors = errors
   }
 }

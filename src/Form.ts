@@ -23,7 +23,7 @@ type SaveOptions = {
 
 type Schema = { [key: string]: any }
 type Values = { [key: string]: any }
-type Errors = { [key: string]: string[] | null }
+export type Errors = { [key: string]: string[] | {} } | null
 
 interface Collection {
   create(data: Values, options: CreateOptions): Promise<any>;
@@ -197,7 +197,7 @@ export default class Form {
     return this.handleErrors(async () => model.save(this.data(), options))
   }
 
-  async handleErrors<T = unknown>(fn: () => Promise<T>): Promise<T> {
+  async handleErrors<T = unknown>(fn: () => Promise<T>) {
     let values: T
 
     try {
