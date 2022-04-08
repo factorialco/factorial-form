@@ -1,5 +1,9 @@
 # Changelog
 
+## `2.0.1`
+
+- Performance improvement: Calculate data only once.
+
 ## `2.0.0`
 
 - Upgrade mobx dependency
