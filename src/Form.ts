@@ -70,7 +70,7 @@ export default class Form {
     )
   }
 
-  // TODO: Deprecate
+  // @deprecated
   data(): Values {
     return this.serialized
   }
