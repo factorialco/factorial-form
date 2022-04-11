@@ -66,7 +66,7 @@ export default class Form {
 
   get serialized(): Values {
     return flat.unflatten(
-      mapValues(this.fields, (field: field) => field._mapOut())
+      mapValues(this.fields, (field: Field) => field._mapOut())
     )
   }
 

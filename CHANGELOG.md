@@ -1,5 +1,9 @@
 # Changelog
 
+## `2.1.2`
+
+- Fixes last release. It was not published correctly due to bug in tslib.
+
 ## `2.1.1`
 
 - Performance improvement: Calculate data only once.
