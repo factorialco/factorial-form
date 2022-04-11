@@ -1,5 +1,9 @@
 # Changelog
 
+## `2.1.1`
+
+- Performance improvement: Calculate data only once.
+
 ## `2.1.0`
 
 - Add `reset` and `resetAll` methods

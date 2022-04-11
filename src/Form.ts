@@ -59,14 +59,20 @@ export default class Form {
       handleErrors: action,
       isComplete: computed,
       values: computed,
-      isDirty: computed
+      isDirty: computed,
+      serialized: computed
     })
   }
 
-  data(): Values {
+  get serialized(): Values {
     return flat.unflatten(
-      mapValues(this.fields, (field: Field) => field._mapOut())
+      mapValues(this.fields, (field: field) => field._mapOut())
     )
+  }
+
+  // @deprecated
+  data(): Values {
+    return this.serialized
   }
 
   has(attribute: string): boolean {
