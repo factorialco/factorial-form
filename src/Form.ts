@@ -9,15 +9,8 @@ import some from 'lodash/some'
 import Field from './Field'
 import flat from 'flat'
 
-type CreateOptions = {
-  optimistic?: boolean,
-  onProgress?: () => any
-}
-
 type SaveOptions = {
-  optimistic?: boolean,
   patch?: boolean,
-  onProgress?: () => any
 }
 
 type Schema = { [key: string]: any }
@@ -25,7 +18,7 @@ type Values = { [key: string]: any }
 type Errors = { [key: string]: Array<string> | {} }
 
 interface Collection {
-  create(data: Values, options: CreateOptions): Promise<any>;
+  create(data: Values): Promise<any>;
 }
 
 interface Model {
@@ -185,11 +178,8 @@ export default class Form {
   /**
    * Creates a new model on the given collection
    */
-  create(
-    collection: Collection,
-    options: CreateOptions = { optimistic: true }
-  ): Promise<any> {
-    return this.handleErrors(() => collection.create(this.data(), options))
+  create(collection: Collection): Promise<any> {
+    return this.handleErrors(() => collection.create(this.data()))
   }
 
   /**
@@ -197,7 +187,7 @@ export default class Form {
    */
   save(
     model: Model,
-    options: SaveOptions = { optimistic: true, patch: true }
+    options: SaveOptions = { patch: true }
   ): Promise<any> {
     return this.handleErrors(async () => model.save(this.data(), options))
   }

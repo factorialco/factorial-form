@@ -1,5 +1,9 @@
 # Changelog
 
+## `3.0.0`
+
+- Remove optimistic and `inProgress` options.
+
 ## `2.1.2`
 
 - Fixes last release. It was not published correctly due to bug in tslib.
