@@ -19,7 +19,7 @@
     "dependencies": {
         "flat": "5.0.2",
         "lodash": "^4.17.21",
-        "moment": "2.29.1",
+        "moment": "2.29.2",
         "mobx": "^6.3.2",
         "rollup-plugin-dts": "^3.0.2"
     },
