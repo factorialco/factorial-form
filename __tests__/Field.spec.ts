@@ -229,4 +229,21 @@ describe('Field', () => {
       expect(field.value).toBe('paco')
     })
   })
+
+  describe('isDirty', () => {
+    it('works correctly when values change', () => {
+      const field = new Field('paco', 'string')
+      expect(field.isDirty).toBeFalsy()
+      field.set('paquito')
+      expect(field.isDirty).toBeTruthy()
+    })
+    describe('for arrays', () => {
+      it('works correctly when values change', () => {
+        const field = new Field([1, 2], 'string')
+        expect(field.isDirty).toBeFalsy()
+        field.set([2, 1])
+        expect(field.isDirty).toBeTruthy()
+      })
+    })
+  })
 })
