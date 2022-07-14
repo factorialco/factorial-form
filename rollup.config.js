@@ -29,6 +29,7 @@ export default [
       'lodash/some',
       'lodash/last',
       'lodash/isObject',
+      'lodash/isEqual',
       'moment',
       'flat',
       'mobx'

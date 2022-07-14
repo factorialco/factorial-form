@@ -1,5 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx'
 import isFinite from 'lodash/isFinite'
+import isEqual from 'lodash/isEqual'
 import moment from 'moment'
 import { Type } from './types'
 import numberParser from './numberParser'
@@ -97,7 +98,7 @@ export default class Field {
   }
 
   get isDirty(): boolean {
-    return this.originalValue !== this.value
+    return !isEqual(this.originalValue, this.value)
   }
 
   mapAndSet(value: any): void {
