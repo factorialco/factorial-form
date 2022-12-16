@@ -246,4 +246,27 @@ describe('Field', () => {
       })
     })
   })
+
+  describe('hasValue', () => {
+
+    it('returns true when value is set', () => {
+      const field = new Field('paco', 'string')
+      expect(field.hasValue).toBeTruthy()
+    })
+
+    it('returns false when value is null', () => {
+      const field = new Field(null, 'string')
+      expect(field.hasValue).toBeFalsy()
+    })
+
+    it('returns true when Field is boolean and value is false', () => {
+      const field = new Field(false, 'boolean')
+      expect(field.hasValue).toBeTruthy()
+    })
+
+    it('returns false when Field is string and value is false', () => {
+      const field = new Field(false, 'string')
+      expect(field.hasValue).toBeFalsy()
+    })
+  })
 })
