@@ -25,6 +25,7 @@ export default class Field {
       errors: observable,
       originalValue: observable,
       isDirty: computed,
+      hasValue: computed,
       mapAndSet: action,
       set: action,
       clean: action,
