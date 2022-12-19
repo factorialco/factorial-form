@@ -269,4 +269,58 @@ describe('Form', () => {
       })
     })
   })
+
+  describe('hasErrors', () => {
+    describe('when there are no errors', () => {
+      it('returns false', () => {
+        expect(form.hasErrors).toBe(false)
+      })
+    })
+
+    describe('when there are errors', () => {
+      beforeEach(() => 
+        form.setErrors({
+          age: 'Must be a positive integer'
+        })
+      )
+      it('returns true', () => {
+        expect(form.hasErrors).toBe(true)
+      })
+    })
+  })
+
+  describe('dirtyFieldsKeys', () => {
+    describe('when there are dirty fields', () => {
+      it('returns empty array', () => {
+        expect(form.dirtyFieldsKeys.length).toBe(0)
+      })
+    })
+
+    describe('when form has dirty fields', () => {
+      beforeEach(() => form.setValues({ name: 'manolo', age: 40 }))
+      it('returns an array with the keys of the fields that are dirty', () => {
+        expect(form.dirtyFieldsKeys.sort())
+          .toEqual(["name", "age"].sort());
+      })
+    })
+  })
+
+  describe('fieldsWithValueKeys', () => {
+    describe('when there are no fields with values', () => {
+      beforeEach(() => form = new Form({}, types))
+      it('returns empty array', () => {
+        expect(form.fieldsWithValueKeys.length).toBe(0)
+      })
+    })
+
+    describe('when some of the fields have values', () => {
+      beforeEach(() => form.setValues({name: null}))
+      it('returns an array with the keys of the fields that have value', () => {
+        expect(form.fieldsWithValueKeys.sort())
+          .toEqual(
+            ["id", "active", "age", "price", "country_metadata.social_security"].sort()
+          );
+      })
+    })
+  })
 })

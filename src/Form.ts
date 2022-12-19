@@ -54,7 +54,10 @@ export default class Form {
       isComplete: computed,
       values: computed,
       isDirty: computed,
-      serialized: computed
+      serialized: computed,
+      hasErrors: computed,
+      dirtyFieldsKeys: computed,
+      fieldsWithValueKeys: computed,
     })
   }
 
@@ -207,5 +210,32 @@ export default class Form {
     })()
 
     return values
+  }
+
+  /**
+   * whether if any of the fields have an error
+   */
+  get hasErrors(): Boolean {
+    return some(this.fields, (field: Field) => field.errors !== null)
+  }
+
+  /**
+   * returns an array of strings with the keys
+   * of the fields that are dirty
+   */
+  get dirtyFieldsKeys():string[] {
+    return Object.entries(this.fields)
+    .filter(([_key, field]) => field.isDirty)
+    .map(([key, _field]) => key)
+  }
+
+  /**
+   * returns an array of strings with the keys
+   * of the fields that has value
+   */
+  get fieldsWithValueKeys():string[] {
+    return Object.entries(this.fields)
+    .filter(([_key, field]) => field.hasValue)
+    .map(([key, _field]) => key)
   }
 }
