@@ -4,6 +4,7 @@ import mapValues from 'lodash/mapValues'
 import get from 'lodash/get'
 import isNull from 'lodash/isNull'
 import isObject from 'lodash/isObject'
+import every from 'lodash/every'
 import forEach from 'lodash/forEach'
 import some from 'lodash/some'
 import Field from './Field'
@@ -128,16 +129,7 @@ export default class Form {
    * Checks if all fields have a value.
    */
   get isComplete(): boolean {
-    return !some(this.fields, (field: Field) => {
-      switch (field.type) {
-        case 'number':
-        case 'cents':
-        case 'boolean':
-          return field.value === '' || isNull(field.value)
-        default:
-          return !field.value
-      }
-    })
+    return every(this.fields, (field: Field): boolean => field.hasValue)
   }
 
   /**
