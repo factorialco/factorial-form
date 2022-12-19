@@ -30,6 +30,7 @@ export default [
       'lodash/last',
       'lodash/isObject',
       'lodash/isEqual',
+      'lodash/every',
       'moment',
       'flat',
       'mobx'
