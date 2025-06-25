@@ -1,22 +1,22 @@
-import { action, computed, toJS, makeObservable } from 'mobx'
-import omitBy from 'lodash/omitBy'
-import mapValues from 'lodash/mapValues'
-import get from 'lodash/get'
-import isNull from 'lodash/isNull'
-import isObject from 'lodash/isObject'
-import every from 'lodash/every'
-import forEach from 'lodash/forEach'
-import some from 'lodash/some'
-import Field from './Field'
-import flat from 'flat'
+import { action, computed, toJS, makeObservable } from "mobx";
+import omitBy from "lodash/omitBy";
+import mapValues from "lodash/mapValues";
+import get from "lodash/get";
+import isNull from "lodash/isNull";
+import isObject from "lodash/isObject";
+import every from "lodash/every";
+import forEach from "lodash/forEach";
+import some from "lodash/some";
+import Field from "./Field";
+import flat from "flat";
 
 type SaveOptions = {
-  patch?: boolean,
-}
+  patch?: boolean;
+};
 
-type Schema = { [key: string]: any }
-type Values = { [key: string]: any }
-type Errors = { [key: string]: Array<string> | {} }
+type Schema = { [key: string]: any };
+type Values = { [key: string]: any };
+type Errors = { [key: string]: Array<string> | {} };
 
 interface Collection {
   create(data: Values): Promise<any>;
@@ -28,21 +28,17 @@ interface Model {
 
 const buildFields = (values: Values, schema: Schema) =>
   omitBy(
-    mapValues(
-      flat(schema),
-      (value: any, attribute: string) =>
-        isObject(value)
-          ? null
-          : new Field(get(values, attribute), value)
+    mapValues(flat(schema), (value: any, attribute: string) =>
+      isObject(value) ? null : new Field(get(values, attribute), value)
     ),
     isNull
-  )
+  );
 
 export default class Form {
-  fields: { [key: string]: Field }
+  fields: { [key: string]: Field };
 
   constructor(values: Values, schema: Schema) {
-    this.fields = buildFields(values, schema)
+    this.fields = buildFields(values, schema);
 
     makeObservable(this, {
       cleanAll: action,
@@ -58,29 +54,29 @@ export default class Form {
       hasErrors: computed,
       dirtyFieldsKeys: computed,
       fieldsWithValueKeys: computed,
-    })
+    });
   }
 
   get serialized(): Values {
     return flat.unflatten(
       mapValues(this.fields, (field: Field) => field._mapOut())
-    )
+    );
   }
 
   // @deprecated
   data(): Values {
-    return this.serialized
+    return this.serialized;
   }
 
   has(attribute: string): boolean {
-    return Boolean(this.fields[attribute])
+    return Boolean(this.fields[attribute]);
   }
 
   get(attribute: string): Field {
-    const field = this.fields[attribute]
-    if (!field) throw new Error(`Field "${attribute}" not found`)
+    const field = this.fields[attribute];
+    if (!field) throw new Error(`Field "${attribute}" not found`);
 
-    return field
+    return field;
   }
 
   /**
@@ -88,9 +84,7 @@ export default class Form {
    * values to correspond to their current values
    */
   cleanAll(): void {
-    forEach(this.fields, (field: Field) =>
-      field.clean()
-    )
+    forEach(this.fields, (field: Field) => field.clean());
   }
 
   /**
@@ -99,9 +93,7 @@ export default class Form {
    */
 
   resetAll(): void {
-    forEach(this.fields, (field: Field) =>
-      field.reset()
-    )
+    forEach(this.fields, (field: Field) => field.reset());
   }
 
   /**
@@ -109,8 +101,8 @@ export default class Form {
    */
   resetErrors(): void {
     forEach(this.fields, (field: Field) => {
-      field.setErrors(null)
-    })
+      field.setErrors(null);
+    });
   }
 
   /**
@@ -118,42 +110,42 @@ export default class Form {
    * hash of attribute -> error
    */
   setErrors(errors: Errors) {
-    this.resetErrors()
+    this.resetErrors();
 
-    const flatErrors: Errors = flat(errors, { safe: true })
+    const flatErrors: Errors = flat(errors, { safe: true });
     forEach(flatErrors, (error: Array<string>, attribute: string) => {
       if (this.has(attribute)) {
-        this.get(attribute).setErrors(error)
+        this.get(attribute).setErrors(error);
       }
-    })
+    });
   }
 
   /**
    * Checks if all fields have a value.
    */
   get isComplete(): boolean {
-    return every(this.fields, (field: Field): boolean => field.hasValue)
+    return every(this.fields, (field: Field): boolean => field.hasValue);
   }
 
   /**
    * Return the values from the form as they are
    */
   get values(): Values {
-    return mapValues(this.fields, (field: Field) => field.value)
+    return mapValues(this.fields, (field: Field) => field.value);
   }
 
   /**
    * Return whether the form is dirty
    */
   get isDirty(): boolean {
-    return some(this.fields, (field: Field): boolean => field.isDirty)
+    return some(this.fields, (field: Field): boolean => field.isDirty);
   }
 
   /**
    * Reset values
    */
   resetValues() {
-    forEach(this.fields, (field: Field) => field.set(''))
+    forEach(this.fields, (field: Field) => field.set(""));
   }
 
   /**
@@ -162,80 +154,77 @@ export default class Form {
    */
   setValues(values: Values) {
     forEach(values, (value: any, attribute: string) => {
-      if (!this.has(attribute)) return
+      if (!this.has(attribute)) return;
 
-      const field = this.get(attribute)
-      field.setErrors(null)
-      field.mapAndSet(value)
-    })
+      const field = this.get(attribute);
+      field.setErrors(null);
+      field.mapAndSet(value);
+    });
   }
 
   /**
    * Creates a new model on the given collection
    */
   create(collection: Collection): Promise<any> {
-    return this.handleErrors(() => collection.create(this.data()))
+    return this.handleErrors(() => collection.create(this.data()));
   }
 
   /**
    * Saves the model with the given fields
    */
-  save(
-    model: Model,
-    options: SaveOptions = { patch: true }
-  ): Promise<any> {
-    return this.handleErrors(async () => model.save(this.data(), options))
+  save(model: Model, options: SaveOptions = { patch: true }): Promise<any> {
+    return this.handleErrors(async () => model.save(this.data(), options));
   }
 
   async handleErrors(fn: () => Promise<any>): Promise<any> {
-    let values: any
+    let values: any;
 
     try {
-      values = toJS(await fn())
+      values = toJS(await fn());
     } catch (error) {
-      const { payload } = error
+      const { payload } = error;
 
-      action('handleErrors-error', () => {
-        this.setErrors(toJS(payload || error))
-        this.cleanAll()
-      })()
+      action("handleErrors-error", () => {
+        this.setErrors(toJS(payload || error));
+        this.cleanAll();
+      })();
 
-      throw error
+      throw error;
     }
 
-    action('handleErrors-done', () => {
-      this.setValues(values)
-      this.resetErrors()
-      this.cleanAll()
-    })()
+    action("handleErrors-done", () => {
+      this.setValues(values);
+      this.resetErrors();
+      this.cleanAll();
+    })();
 
-    return values
+    return values;
   }
 
   /**
    * whether if any of the fields have an error
    */
   get hasErrors(): Boolean {
-    return some(this.fields, (field: Field) => field.errors !== null)
+    return some(this.fields, (field: Field) => field.errors !== null);
   }
 
   /**
    * returns an array of strings with the keys
    * of the fields that are dirty
    */
-  get dirtyFieldsKeys():string[] {
+  get dirtyFieldsKeys(): string[] {
     return Object.entries(this.fields)
-    .filter(([_key, field]) => field.isDirty)
-    .map(([key, _field]) => key)
+      .filter(([_key, field]) => field.isDirty)
+      .map(([key, _field]) => key);
   }
 
   /**
    * returns an array of strings with the keys
    * of the fields that has value
    */
-  get fieldsWithValueKeys():string[] {
+  get fieldsWithValueKeys(): string[] {
     return Object.entries(this.fields)
-    .filter(([_key, field]) => field.hasValue)
-    .map(([key, _field]) => key)
+      .filter(([_key, field]) => field.hasValue)
+      .map(([key, _field]) => key);
   }
 }

@@ -1,9 +1,9 @@
 export type Type =
-  | 'date'
-  | 'timestamp'
-  | 'number'
-  | 'string'
-  | 'file'
-  | 'boolean'
-  | 'cents'
-  | 'any'
+  | "date"
+  | "timestamp"
+  | "number"
+  | "string"
+  | "file"
+  | "boolean"
+  | "cents"
+  | "any";
