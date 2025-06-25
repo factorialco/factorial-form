@@ -11,7 +11,7 @@ import Field from './Field'
 import flat from 'flat'
 
 type SaveOptions = {
-  patch?: boolean,
+  patch?: boolean
 }
 
 type Schema = { [key: string]: any }
@@ -19,21 +19,17 @@ type Values = { [key: string]: any }
 type Errors = { [key: string]: Array<string> | {} }
 
 interface Collection {
-  create(data: Values): Promise<any>;
+  create(data: Values): Promise<any>
 }
 
 interface Model {
-  save(data: Values, options: SaveOptions): Promise<any>;
+  save(data: Values, options: SaveOptions): Promise<any>
 }
 
 const buildFields = (values: Values, schema: Schema) =>
   omitBy(
-    mapValues(
-      flat(schema),
-      (value: any, attribute: string) =>
-        isObject(value)
-          ? null
-          : new Field(get(values, attribute), value)
+    mapValues(flat(schema), (value: any, attribute: string) =>
+      isObject(value) ? null : new Field(get(values, attribute), value)
     ),
     isNull
   )
@@ -62,9 +58,7 @@ export default class Form {
   }
 
   get serialized(): Values {
-    return flat.unflatten(
-      mapValues(this.fields, (field: Field) => field._mapOut())
-    )
+    return flat.unflatten(mapValues(this.fields, (field: Field) => field._mapOut()))
   }
 
   // @deprecated
@@ -88,9 +82,7 @@ export default class Form {
    * values to correspond to their current values
    */
   cleanAll(): void {
-    forEach(this.fields, (field: Field) =>
-      field.clean()
-    )
+    forEach(this.fields, (field: Field) => field.clean())
   }
 
   /**
@@ -99,9 +91,7 @@ export default class Form {
    */
 
   resetAll(): void {
-    forEach(this.fields, (field: Field) =>
-      field.reset()
-    )
+    forEach(this.fields, (field: Field) => field.reset())
   }
 
   /**
@@ -180,10 +170,7 @@ export default class Form {
   /**
    * Saves the model with the given fields
    */
-  save(
-    model: Model,
-    options: SaveOptions = { patch: true }
-  ): Promise<any> {
+  save(model: Model, options: SaveOptions = { patch: true }): Promise<any> {
     return this.handleErrors(async () => model.save(this.data(), options))
   }
 
@@ -223,19 +210,19 @@ export default class Form {
    * returns an array of strings with the keys
    * of the fields that are dirty
    */
-  get dirtyFieldsKeys():string[] {
+  get dirtyFieldsKeys(): string[] {
     return Object.entries(this.fields)
-    .filter(([_key, field]) => field.isDirty)
-    .map(([key, _field]) => key)
+      .filter(([_key, field]) => field.isDirty)
+      .map(([key, _field]) => key)
   }
 
   /**
    * returns an array of strings with the keys
    * of the fields that has value
    */
-  get fieldsWithValueKeys():string[] {
+  get fieldsWithValueKeys(): string[] {
     return Object.entries(this.fields)
-    .filter(([_key, field]) => field.hasValue)
-    .map(([key, _field]) => key)
+      .filter(([_key, field]) => field.hasValue)
+      .map(([key, _field]) => key)
   }
 }

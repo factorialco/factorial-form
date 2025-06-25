@@ -7,8 +7,8 @@ const attributes = {
   age: 0,
   price: 0,
   country_metadata: {
-    social_security: '1234'
-  }
+    social_security: '1234',
+  },
 }
 
 const types = {
@@ -18,8 +18,8 @@ const types = {
   price: 'cents',
   active: 'boolean',
   country_metadata: {
-    social_security: 'string'
-  }
+    social_security: 'string',
+  },
 }
 
 describe('buildFields', () => {
@@ -29,10 +29,7 @@ describe('buildFields', () => {
   })
 
   it('with an nested object it should include that field flattened', () => {
-    const form = new Form(
-      { foo: { bar: 'qux' } },
-      { foo: { bar: 'string' } }
-    )
+    const form = new Form({ foo: { bar: 'qux' } }, { foo: { bar: 'string' } })
     expect(form.get('foo.bar').value).toBe('qux')
   })
 })
@@ -58,7 +55,7 @@ describe('Form', () => {
         active: true,
         age: '0',
         price: '0',
-        'country_metadata.social_security': '1234'
+        'country_metadata.social_security': '1234',
       })
     })
   })
@@ -79,8 +76,8 @@ describe('Form', () => {
           age: 0,
           price: 0,
           country_metadata: {
-            social_security: '1234'
-          }
+            social_security: '1234',
+          },
         }
         form = new Form(newAttr, types)
       })
@@ -159,10 +156,10 @@ describe('Form', () => {
     it('resets form to its original values', () => {
       form.setValues({ name: 'resetMe', age: 20 })
       expect(form.get('name').value).toBe('resetMe')
-      expect(form.get('age').value).toBe("20")
+      expect(form.get('age').value).toBe('20')
       form.resetAll()
       expect(form.get('name').value).toBe('paco')
-      expect(form.get('age').value).toBe("0")
+      expect(form.get('age').value).toBe('0')
     })
   })
 
@@ -173,18 +170,14 @@ describe('Form', () => {
     })
 
     it('ignores the inexistent fields', () => {
-      expect(() =>
-        form.setErrors({ lol: ['too short'] })
-      ).not.toThrow()
+      expect(() => form.setErrors({ lol: ['too short'] })).not.toThrow()
     })
 
     it('works with nested errors', () => {
       form.setErrors({
-        country_metadata: { social_security: ['invalid'] }
+        country_metadata: { social_security: ['invalid'] },
       })
-      expect(
-        form.get('country_metadata.social_security').errors[0]
-      ).toEqual('invalid')
+      expect(form.get('country_metadata.social_security').errors[0]).toEqual('invalid')
     })
   })
 
@@ -204,7 +197,7 @@ describe('Form', () => {
 
   describe('save', () => {
     it('sets the values if the promise succeeds', () => {
-      const saveMock = jest.fn(values => {
+      const saveMock = jest.fn((values) => {
         return new Promise((resolve, _reject) => {
           resolve(values)
         })
@@ -213,9 +206,9 @@ describe('Form', () => {
       return form
         .save({
           save: saveMock,
-          attributes: { toJS: () => { } }
+          attributes: { toJS: () => {} },
         })
-        .then(vals => {
+        .then((vals) => {
           expect(vals).toEqual(attributes)
           expect(form.data()).toEqual(attributes)
         })
@@ -223,7 +216,7 @@ describe('Form', () => {
 
     it('sets the errors if the promise fails', () => {
       const errors = { name: ['too long'] }
-      const saveMock = jest.fn(_values => {
+      const saveMock = jest.fn((_values) => {
         return new Promise((_resolve, reject) => {
           reject(errors)
         })
@@ -232,9 +225,9 @@ describe('Form', () => {
       return form
         .save({
           save: saveMock,
-          attributes: { toJS: () => { } }
+          attributes: { toJS: () => {} },
         })
-        .catch(err => {
+        .catch((err) => {
           expect(err).toEqual(errors)
           expect(form.get('name').errors.slice()).toEqual(errors.name)
         })
@@ -243,13 +236,13 @@ describe('Form', () => {
 
   describe('create', () => {
     it('sets the values if the promise succeeds', () => {
-      const createMock = jest.fn(values => {
+      const createMock = jest.fn((values) => {
         return new Promise((resolve, _reject) => {
           resolve(values)
         })
       })
 
-      return form.create({ create: createMock }).then(vals => {
+      return form.create({ create: createMock }).then((vals) => {
         expect(vals).toEqual(attributes)
         expect(form.data()).toEqual(attributes)
       })
@@ -257,13 +250,13 @@ describe('Form', () => {
 
     it('sets the errors if the promise fails', () => {
       const errors = { name: ['too long'] }
-      const createMock = jest.fn(_values => {
+      const createMock = jest.fn((_values) => {
         return new Promise((_resolve, reject) => {
           reject(errors)
         })
       })
 
-      return form.create({ create: createMock }).catch(err => {
+      return form.create({ create: createMock }).catch((err) => {
         expect(err).toEqual(errors)
         expect(form.get('name').errors.slice()).toEqual(errors.name)
       })
@@ -278,9 +271,9 @@ describe('Form', () => {
     })
 
     describe('when there are errors', () => {
-      beforeEach(() => 
+      beforeEach(() =>
         form.setErrors({
-          age: 'Must be a positive integer'
+          age: 'Must be a positive integer',
         })
       )
       it('returns true', () => {
@@ -299,27 +292,25 @@ describe('Form', () => {
     describe('when form has dirty fields', () => {
       beforeEach(() => form.setValues({ name: 'manolo', age: 40 }))
       it('returns an array with the keys of the fields that are dirty', () => {
-        expect(form.dirtyFieldsKeys.sort())
-          .toEqual(["name", "age"].sort());
+        expect(form.dirtyFieldsKeys.sort()).toEqual(['name', 'age'].sort())
       })
     })
   })
 
   describe('fieldsWithValueKeys', () => {
     describe('when there are no fields with values', () => {
-      beforeEach(() => form = new Form({}, types))
+      beforeEach(() => (form = new Form({}, types)))
       it('returns empty array', () => {
         expect(form.fieldsWithValueKeys.length).toBe(0)
       })
     })
 
     describe('when some of the fields have values', () => {
-      beforeEach(() => form.setValues({name: null}))
+      beforeEach(() => form.setValues({ name: null }))
       it('returns an array with the keys of the fields that have value', () => {
-        expect(form.fieldsWithValueKeys.sort())
-          .toEqual(
-            ["id", "active", "age", "price", "country_metadata.social_security"].sort()
-          );
+        expect(form.fieldsWithValueKeys.sort()).toEqual(
+          ['id', 'active', 'age', 'price', 'country_metadata.social_security'].sort()
+        )
       })
     })
   })

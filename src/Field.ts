@@ -29,7 +29,7 @@ export default class Field {
       mapAndSet: action,
       set: action,
       clean: action,
-      setErrors: action
+      setErrors: action,
     })
   }
 
@@ -67,9 +67,7 @@ export default class Field {
    * Converts back the value from the field
    */
   _mapOut(): any | null {
-    const value = typeof this.value === 'string'
-      ? this.value.trim()
-      : this.value
+    const value = typeof this.value === 'string' ? this.value.trim() : this.value
 
     switch (this.type) {
       case 'timestamp':
@@ -78,14 +76,10 @@ export default class Field {
         const date = moment(String(value), DATE_FORMAT, true)
         return date.isValid() ? date.format('YYYY-MM-DD') : null
       case 'number':
-        const number = numberParser(
-          typeof value === 'number' ? value.toString() : String(value)
-        )
+        const number = numberParser(typeof value === 'number' ? value.toString() : String(value))
         return number != null && isFinite(number) ? Math.round(number) : null
       case 'cents':
-        const cents = numberParser(
-          typeof value === 'number' ? value.toString() : String(value)
-        )
+        const cents = numberParser(typeof value === 'number' ? value.toString() : String(value))
 
         return cents != null && isFinite(cents) ? Math.round(cents * 100) : null
       case 'boolean':

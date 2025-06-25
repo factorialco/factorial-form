@@ -1,9 +1,1 @@
-export type Type =
-  | 'date'
-  | 'timestamp'
-  | 'number'
-  | 'string'
-  | 'file'
-  | 'boolean'
-  | 'cents'
-  | 'any'
+export type Type = 'date' | 'timestamp' | 'number' | 'string' | 'file' | 'boolean' | 'cents' | 'any'

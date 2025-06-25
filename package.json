@@ -35,6 +35,7 @@
         "husky": "4.3.0",
         "jest": "27.0.4",
         "lint-staged": "11.0.0",
+        "prettier": "2.8.8",
         "rollup": "2.51.2",
         "rollup-plugin-node-resolve": "5.2.0",
         "rollup-plugin-typescript2": "^0.36.0",
@@ -45,11 +46,13 @@
     "main": "lib",
     "types": "./lib/index.d.ts",
     "scripts": {
+        "format": "prettier --write 'src/**/*.ts' '__tests__/**/*.ts'",
+        "format:check": "prettier --check 'src/**/*.ts' '__tests__/**/*.ts'",
         "build": "rollup --config",
         "prepublish": "npm run build",
         "jest": "NODE_PATH=src jest --no-cache",
         "lint": "eslint --ext .ts --cache src/ __tests__/",
-        "test": "npm run lint && npm run jest",
+        "test": "npm run lint && npm run format:check && npm run jest",
         "prepush": "npm run test",
         "watch": "rollup --config -w",
         "lint-staged": {

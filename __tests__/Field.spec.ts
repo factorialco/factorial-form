@@ -248,7 +248,6 @@ describe('Field', () => {
   })
 
   describe('hasValue', () => {
-
     it('returns true when value is set', () => {
       const field = new Field('paco', 'string')
       expect(field.hasValue).toBeTruthy()
