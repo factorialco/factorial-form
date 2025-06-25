@@ -46,6 +46,7 @@
     "types": "./lib/index.d.ts",
     "scripts": {
         "build": "rollup --config",
+        "prepublish": "npm run build",
         "jest": "NODE_PATH=src jest --no-cache",
         "lint": "eslint --ext .ts --cache src/ __tests__/",
         "test": "npm run lint && npm run jest",
