@@ -26,19 +26,21 @@ interface Model {
   save(data: Values, options: SaveOptions): Promise<any>
 }
 
-const buildFields = (values: Values, schema: Schema) =>
-  omitBy(
-    mapValues(flat(schema), (value: any, attribute: string) =>
-      isObject(value) ? null : new Field(get(values, attribute), value)
-    ),
-    isNull
-  )
+export default class Form<V extends Record<string, any>, S extends Record<string, any>> {
+  fields;
 
-export default class Form {
-  fields: { [key: string]: Field }
+  _buildFields = (values: V, schema: S) =>
+    mapValues(
+      flat(schema),
+      (value: any, attribute: string) =>
+        isObject(value)
+          ? null
+          : new Field(get(values, attribute), value)
+    )
 
-  constructor(values: Values, schema: Schema) {
-    this.fields = buildFields(values, schema)
+
+  constructor(values: V, schema: S) {
+    this.fields = this._buildFields(values, schema)
 
     makeObservable(this, {
       cleanAll: action,
@@ -66,11 +68,11 @@ export default class Form {
     return this.serialized
   }
 
-  has(attribute: string): boolean {
+  has(attribute: keyof S): boolean {
     return Boolean(this.fields[attribute])
   }
 
-  get(attribute: string): Field {
+  get(attribute: keyof S): Field {
     const field = this.fields[attribute]
     if (!field) throw new Error(`Field "${attribute}" not found`)
 
